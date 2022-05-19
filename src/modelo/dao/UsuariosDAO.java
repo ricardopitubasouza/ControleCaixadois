@@ -14,6 +14,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import modelo.bean.Usuario;
 import produzconexao.ConexaoFirebird;
+import util.GuardarUrl;
+import static view.frmLogin.txtLogsenha;
 
 /**
  *
@@ -46,7 +48,7 @@ public class UsuariosDAO {
     
     public List<Usuario> selecionaradmin(){
          Connection con = ConexaoFirebird.getConnection();
-         JOptionPane.showMessageDialog(null, "conexão dentro do selecionar, " + con);
+         //JOptionPane.showMessageDialog(null, "conexão dentro do selecionar, " + con);
          PreparedStatement stmt = null;
          ResultSet rs = null;
          List<Usuario> selecionausuario = new ArrayList<>();
@@ -72,17 +74,19 @@ public class UsuariosDAO {
     }
     
     public List<Usuario> selecionarusuario(String usuario){
+
          Connection con = ConexaoFirebird.getConnection();
          PreparedStatement stmt = null;
          ResultSet rs = null;
          List<Usuario> selecionausuario = new ArrayList<>();
+         Usuario usuarionome = new Usuario();
+         //String usuariosenha = "";
         try {
-            stmt = con.prepareStatement("SELECT ID, USUARIO, SENHA, ADIMIN FROM USUARIOS \n"+
-                    "WHERE USUARIO = ?");
+            stmt = con.prepareStatement("SELECT * FROM USUARIOS WHERE USUARIO = ?");
            
             stmt.setString(1, usuario);
             rs = stmt.executeQuery();
-            Usuario usuarionome = new Usuario();
+            
                              while (rs.next()){
                               usuarionome.setId(rs.getInt("ID"));
                               usuarionome.setUsuario(rs.getString("USUARIO"));
@@ -98,5 +102,41 @@ public class UsuariosDAO {
             
         }                                                    
         return selecionausuario;
+    }
+    
+    public String selecionarusuarioadmin(String usuario){
+         Connection con = ConexaoFirebird.getConnection();
+         PreparedStatement stmt = null;
+         ResultSet rs = null;
+         //List<Usuario> selecionausuario = new ArrayList<>();
+         Usuario usuarionome = new Usuario();
+        try {
+            stmt = con.prepareStatement("SELECT ID, USUARIO, SENHA, ADIMIN FROM USUARIOS \n"+
+                    "WHERE USUARIO = ?");
+           
+            stmt.setString(1, usuario);
+            rs = stmt.executeQuery();
+            
+                             //while (rs.next()){
+                              //usuarionome.setId(rs.getInt("ID"));
+                             // usuarionome.setUsuario(rs.getString("USUARIO"));
+                              usuarionome.setSenha(rs.getString("SENHA"));
+                              usuarionome.setAdmin(rs.getString("ADIMIN"));
+                              //selecionausuario.add(usuarionome);
+                             //}
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null,"Erro no processo de busca! " + ex,
+                    "Bragança", JOptionPane.ERROR_MESSAGE);
+        }finally {
+            ConexaoFirebird.closeConnection(con, stmt, rs);
+            
+        }        
+        if(usuarionome.getAdmin().equals("sim") && usuarionome.getSenha().equals(String.valueOf(txtLogsenha.getPassword()))){
+            return "Administrador";
+        }else if(usuarionome.getAdmin().equals("não")){
+            return "não";
+        }else{
+            return null;
+        }
     }
 }

@@ -10,18 +10,23 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import static java.lang.Thread.sleep;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import modelo.bean.Datas;
 import modelo.bean.Entradas;
 import modelo.bean.Usuario;
 import modelo.dao.MovimentoDAO;
+import modelo.dao.UrlDao;
 import modelo.dao.UsuariosDAO;
+import produzconexao.ConexaoFirebird;
 import produzconexao.RefazerConexao;
 import util.EntradaNovo;
 import util.GerenciadordeJanelas;
@@ -191,7 +196,7 @@ public class frmEntrar extends javax.swing.JInternalFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(140, 140, 140)
                         .addComponent(jLabel8)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(0, 117, Short.MAX_VALUE)
                 .addComponent(btnLogEntrar, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -201,7 +206,7 @@ public class frmEntrar extends javax.swing.JInternalFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addGap(18, 38, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtLognickentrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -235,7 +240,7 @@ public class frmEntrar extends javax.swing.JInternalFrame {
         );
 
         getContentPane().add(jPanel2);
-        jPanel2.setBounds(0, 0, 0, 440);
+        jPanel2.setBounds(0, 0, 377, 440);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -277,18 +282,51 @@ public class frmEntrar extends javax.swing.JInternalFrame {
         
         if(!txtLognickentrar.getText().equals("") && !String.valueOf(txtLogsenhaentrar.getPassword()).equals("")){
         
-        RefazerConexao rfc = new RefazerConexao();
-        rfc.refazerconexao();
+        String resultado = guardarurl.GetProp("conectar"); 
+        String ip = guardarurl.GetProp("IP");
+        ip = "localhost";
+        //JOptionPane.showMessageDialog(null,resultado);
+        //JOptionPane.showMessageDialog(null,ip);
+        try {
+            if (!resultado.equals("")) {
+                ConexaoFirebird conect = new ConexaoFirebird(resultado, ip);
+            } else {
+                String servidor = JOptionPane.showInputDialog(null,"Digite aqui o IP do servidor, caso exista um!");
+                UrlDao url = new UrlDao();
+                //url.pegaurl();
+                if(!"".equals(servidor)){
+                url.pegaurl(servidor);
+                }else{
+                url.pegaurl("localhost");
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            //UrlDao url = new UrlDao();
+            //url.pegaurl();
+            
+            String servidor = JOptionPane.showInputDialog(null,"Digite aqui o IP do servidor, caso exista um!");
+                UrlDao url = new UrlDao();
+                if(servidor != ""){
+                url.pegaurl(servidor);
+                }else{
+                url.pegaurl("localhost");
+                }
+            
+        } catch (SQLException ex) {
+           System.exit(0);
+        }  
         List<Usuario> selecionandousuario = new ArrayList<>();
+        //String selecionandousuario;
         UsuariosDAO usdao = new UsuariosDAO();
-        selecionandousuario = usdao.selecionarusuario(txtLognickentrar.getText());
-
-        for(Usuario usuarios : selecionandousuario){
-                       idusuario = usuarios.getId();
-                       nomeusuario = usuarios.getUsuario();
-                       senha = usuarios.getSenha();
-                       tipousuario = usuarios.getAdmin();
-                      }
+               
+                    selecionandousuario = usdao.selecionarusuario(txtLognickentrar.getText());
+                    for(Usuario usuarios : selecionandousuario){
+                    idusuario = usuarios.getId();
+                    nomeusuario = usuarios.getUsuario();
+                    senha = usuarios.getSenha();
+                    tipousuario = usuarios.getAdmin();
+                    }
+               
 
         if(senha.equals(String.valueOf(txtLogsenhaentrar.getPassword()))){
            txtLognickentrar.setText("");

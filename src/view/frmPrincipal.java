@@ -76,12 +76,11 @@ public class frmPrincipal extends javax.swing.JFrame {
         String resultado = guardarurl.GetProp("conectar"); 
         String ip = guardarurl.GetProp("IP");
         ip = "localhost";
-        JOptionPane.showMessageDialog(null,resultado);
-        JOptionPane.showMessageDialog(null,ip);
+        //JOptionPane.showMessageDialog(null,resultado);
+        //JOptionPane.showMessageDialog(null,ip);
         try {
             if (!resultado.equals("")) {
                 ConexaoFirebird conect = new ConexaoFirebird(resultado, ip);
-                JOptionPane.showMessageDialog(null, "aqui já "  + conect);
             } else {
                 String servidor = JOptionPane.showInputDialog(null,"Digite aqui o IP do servidor, caso exista um!");
                 UrlDao url = new UrlDao();
@@ -115,9 +114,13 @@ public class frmPrincipal extends javax.swing.JFrame {
         
         List<Usuario> selecionandousuario = new ArrayList<>();
         UsuariosDAO usdao = new UsuariosDAO();
-        JOptionPane.showMessageDialog(null, "aqui mesmo"  + usdao.selecionaradmin());  
-        selecionandousuario = usdao.selecionaradmin();
-        if(!selecionandousuario.isEmpty()){
+        //JOptionPane.showMessageDialog(null, "aqui mesmo" );  
+        /*(selecionandousuario = usdao.selecionaradmin();
+        for(Usuario admin : usdao.selecionaradmin()){
+            selecionandousuario.add(admin);
+        }
+        JOptionPane.showMessageDialog(null, selecionandousuario.isEmpty());*/
+        if(!usdao.selecionaradmin().isEmpty()){
            abrirentrar(); 
            txtLognickentrar.requestFocus();
            mnEntrar.setEnabled(false);
@@ -129,8 +132,7 @@ public class frmPrincipal extends javax.swing.JFrame {
            if(frmLogin.getInstancia().isSelected()){
               gerenciadordejanelas.fecharjanelas(frmLogin.getInstancia());
            }
-        }
-        if(selecionandousuario.isEmpty()){
+        }else{
             abrirlogin();
             //frmLogin frmlogin = new frmLogin();
             txtLognick.requestFocus();

@@ -26,6 +26,7 @@ public class RefazerConexao {
                 GuardarUrl guardarurl = new GuardarUrl();
                 String resultado = guardarurl.GetProp("conectar");
                 String ip = guardarurl.GetProp("IP");
+                ip = "localhost";
                 if(resultado != null){
                     ConexaoFirebird conect = new ConexaoFirebird(resultado, ip);
                 }

@@ -296,14 +296,14 @@ public class frmReservaDeCaixa extends javax.swing.JInternalFrame {
         
         RefazerConexao rfc = new RefazerConexao();
         rfc.refazerconexao();
-        List<Usuario> selecionandousuario = new ArrayList<>();
+        //List<Usuario> selecionandousuario = new ArrayList<>();
         UsuariosDAO usdao = new UsuariosDAO();
-        selecionandousuario = usdao.selecionarusuario(lognickentrar);
+        String selecionandousuario = usdao.selecionarusuarioadmin(lognickentrar);
 
-        for(Usuario usuarios : selecionandousuario){
+        /*for(Usuario usuarios : selecionandousuario){
                        tipousuario = usuarios.getAdmin();
-                      }
-           if(tipousuario.equals("sim")){
+                      }*/
+           if(selecionandousuario.equalsIgnoreCase("Administrador")){
               btnCaixa.setEnabled(true);
               mnCaixa.setEnabled(true);
               mnFecharcaixa.setEnabled(false);

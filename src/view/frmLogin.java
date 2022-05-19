@@ -388,7 +388,13 @@ public class frmLogin extends javax.swing.JInternalFrame {
                               List<Usuario> selecionandousuario = new ArrayList<>();
                               UsuariosDAO usdao = new UsuariosDAO();
                               selecionandousuario = usdao.selecionarusuario(txtNome.getText());
-                            if(!selecionandousuario.isEmpty()){
+                              for(Usuario usuarios : selecionandousuario){
+                                  //idusuario = usuarios.getId();
+                                  nomeusuario = usuarios.getUsuario();
+                                  //senha = usuarios.getSenha();
+                                  tipousuario = usuarios.getAdmin();
+                              }
+                            if(!nomeusuario.isEmpty()){
                                 JOptionPane.showMessageDialog(null, "Já exite um usuário com este nome\n"
                                         + " cadastrado!");
                                 txtNome.setText("");
@@ -517,17 +523,17 @@ public class frmLogin extends javax.swing.JInternalFrame {
             String resultado = guardarurl.GetProp("conectar");
             RefazerConexao rfc = new RefazerConexao();
             rfc.refazerconexao();
-            List<Usuario> selecionandousuario = new ArrayList<>();
+            //List<Usuario> selecionandousuario = new ArrayList<>();
             UsuariosDAO usdao = new UsuariosDAO();
-            selecionandousuario = usdao.selecionarusuario(txtLognick.getText());
+            String selecionandousuario = usdao.selecionarusuarioadmin(txtLognick.getText());
 
-            for(Usuario usuario : selecionandousuario){
+            /*for(Usuario usuario : selecionandousuario){
                 idusuario = usuario.getId();
                 nomeusuario = usuario.getUsuario();
                 senha = usuario.getSenha();
                 tipousuario = usuario.getAdmin();
-                }
-            if(tipousuario.equals("sim") && senha.equals(String.valueOf(txtLogsenha.getPassword()))){
+                }*/
+            if(selecionandousuario.equalsIgnoreCase("Administrador")){
                 cbxAdministrador.setSelected(false);
                 txtNome.setEnabled(true);
                 txtSenha.setEnabled(true);
@@ -539,7 +545,7 @@ public class frmLogin extends javax.swing.JInternalFrame {
                 frmlogin.setClosable(true);
                 btnNovoEntrar.setEnabled(false);
             }else{
-                if(tipousuario.equals("nao") && senha.equals(String.valueOf(txtLogsenha.getPassword()))){
+                if(selecionandousuario.equalsIgnoreCase("não")){
                     txtLognick.setText("");
                     txtLogsenha.setText("");
                     frmlogin.setClosable(false);

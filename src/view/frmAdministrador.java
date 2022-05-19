@@ -10,11 +10,14 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import static java.lang.Thread.sleep;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import modelo.bean.Datas;
@@ -239,7 +242,7 @@ public class frmAdministrador extends javax.swing.JInternalFrame {
         );
 
         getContentPane().add(jPanel2);
-        jPanel2.setBounds(0, 0, 0, 440);
+        jPanel2.setBounds(0, 0, 377, 440);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -285,7 +288,9 @@ public class frmAdministrador extends javax.swing.JInternalFrame {
         rfc.refazerconexao();
         List<Usuario> selecionandousuario = new ArrayList<>();
         UsuariosDAO usdao = new UsuariosDAO();
-        selecionandousuario = usdao.selecionarusuario(txtAdmLognickentrar.getText());
+                
+                    selecionandousuario = usdao.selecionarusuario(txtAdmLognickentrar.getText());
+                
 
         for(Usuario usuarios : selecionandousuario){
                        idusuario = usuarios.getId();

@@ -662,14 +662,14 @@ public class frmMovimentodia extends javax.swing.JInternalFrame {
            
            RefazerConexao rfc = new RefazerConexao();
            rfc.refazerconexao();
-           List<Usuario> selecionandousuario = new ArrayList<>();
+           //List<Usuario> selecionandousuario = new ArrayList<>();
            UsuariosDAO usdao = new UsuariosDAO();
-           selecionandousuario = usdao.selecionarusuario(usuario);
+           String selecionandousuario = usdao.selecionarusuarioadmin(usuario);
 
-        for(Usuario usuarios : selecionandousuario){
+        /*for(Usuario usuarios : selecionandousuario){
                        tipousuario = usuarios.getAdmin();
-                      }
-           if(tipousuario.equals("sim")){
+                      }*/
+           if(selecionandousuario.equalsIgnoreCase("Administrador")){
               mnCaixa.setEnabled(true);
               btnCaixa.setEnabled(true);
               mnFecharcaixa.setEnabled(false);
